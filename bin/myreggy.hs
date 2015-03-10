@@ -1,4 +1,4 @@
--- |
+-- | Authour: Dante Elrik
 module Main where
 
 type ParseResult    = ReadS (String)
@@ -10,21 +10,13 @@ data Regex   = Regex {
 instance Show Regex where
   show l = "/" ++ (expression l) ++ "/"
 
-evalRegex     :: Regex -> ParseResult
-evalRegex r s = go (expression r) s ""
-  where
-    go  _ [] matches        = return (matches,"")
-    go [] remaining matches = return (matches, remaining)
-    go (m:ms) (t:ts) matches
-      | t == m    = go ms ts (matches ++ [t])
-      | otherwise = go (expression r) ts []
-
-
 mkRegex   :: String -> Regex
 mkRegex   = Regex
 
 tRegex    = Regex "abc"
-tRegex2   = Regex "danterocks"
+tRegex2   = Regex "abc[456]123"
+tRegex3   = Regex "abc.23"
+tRegex4   = Regex "[0123456789][0123456789].[0123456789][0123456789].[0123456789][0123456789]"
 
 main = do
        pattern    <- getLine
@@ -32,4 +24,20 @@ main = do
        let
          expression = mkRegex pattern
          result@[(matched,unparsed)] = evalRegex expression input
-       print result
+       print $ matched ++ "," ++ unparsed
+
+
+
+evalRegex     :: Regex -> ParseResult
+evalRegex r s = go (expression r) s ""
+  where
+    go [] remaining matches = return (matches, remaining)
+    go ms [] matches        = return (matches, "")
+    go charClass@('[':ms) (t:ts) matches = case t `elem` (takeWhile (/= ']') ms) of
+                                  True  -> go (dropWhile (/=']') ms) ts (matches ++ [t])
+                                  False -> go (expression r) ts ""
+    go (']':ms) (t:ts) matches = go ms (t:ts) matches
+    go (m:ms) (t:ts) matches
+      | m == '.'  = go ms ts (matches ++ [t])
+      | m == t    = go ms ts (matches ++ [t])
+      | otherwise = go (expression r) ts ""
