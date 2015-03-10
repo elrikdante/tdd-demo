@@ -1,10 +1,12 @@
 require 'open3'
 module MyRegex
+
   class << self
     def build body
       Instance.new(body)
     end
   end
+
   class Instance
 
     def initialize(body)
@@ -25,9 +27,10 @@ module MyRegex
         input.puts @body
         input.puts @string
         input.close
-        result = output.read.chomp.to_i
-        @success = result == 1
+        result = output.read.chomp.split(',')
+        @success = result.first.length > 0
       end
     end
   end
+
 end
