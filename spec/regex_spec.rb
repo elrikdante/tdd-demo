@@ -7,10 +7,12 @@ describe MyRegex do
 
   context "Parsing a" do
 
-    context "Literal match" do
+    context "Literal match: " do
 
       context '/abc/' do
+
         let (:body) { 'abc' }
+
         context 'applied to "abc"' do
           let (:input) { "abc" }
 
@@ -27,8 +29,8 @@ describe MyRegex do
           end
         end
 
-        context 'applied to "acb"' do
-          let (:input) { 'acb' }
+        context 'applied to "b"' do
+          let (:input) { 'x' }
 
           it "doesn't match" do
             should eq(false)

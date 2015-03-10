@@ -1,4 +1,5 @@
 require 'open3'
+require 'pry'
 module MyRegex
 
   class << self
@@ -21,16 +22,9 @@ module MyRegex
 
     private
     def run!
-      Open3.popen3("./bin/myreggy") do |input,output,_|
-        input.sync = true
-        output.sync = true
-        input.puts @body
-        input.puts @string
-        input.close
-        result = output.read.chomp.split(',')
-        p result
-        @success = result.first.length > 0
-      end
+      result,_ = Open3.capture2("./bin/myreggy", stdin_data: [@body,@string].join("\n"))
+      result   = result.chomp.gsub(/"/m,'').split(',')
+      @success = result.any? && result.first.length > 0
     end
   end
 
