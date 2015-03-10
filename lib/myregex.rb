@@ -28,6 +28,7 @@ module MyRegex
         input.puts @string
         input.close
         result = output.read.chomp.split(',')
+        p result
         @success = result.first.length > 0
       end
     end

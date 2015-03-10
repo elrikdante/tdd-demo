@@ -31,12 +31,12 @@ main = do
 evalRegex     :: Regex -> ParseResult
 evalRegex r s = go (expression r) s ""
   where
-    go [] remaining matches = return (matches, remaining)
-    go ms [] matches        = return (matches, "")
+    go [] remaining matches              = return (matches, remaining)
+    go ms [] matches                     = return (matches, [])
     go charClass@('[':ms) (t:ts) matches = case t `elem` (takeWhile (/= ']') ms) of
                                   True  -> go (dropWhile (/=']') ms) ts (matches ++ [t])
                                   False -> go (expression r) ts ""
-    go (']':ms) (t:ts) matches = go ms (t:ts) matches
+    go (']':ms) ts matches = go ms ts matches
     go (m:ms) (t:ts) matches
       | m == '.'  = go ms ts (matches ++ [t])
       | m == t    = go ms ts (matches ++ [t])

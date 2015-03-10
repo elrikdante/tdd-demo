@@ -1,4 +1,4 @@
-require 'myregex'
+require File.expand_path './lib/myregex'
 describe MyRegex do
   subject      { reggy.match? input }
   let (:body)  { 'a' }
@@ -6,39 +6,50 @@ describe MyRegex do
 
 
   context "Parsing a" do
+
     context "Literal match" do
 
-      let (:body) { 'abc' }
+      context '/abc/' do
+        let (:body) { 'abc' }
+        context 'applied to "abc"' do
+          let (:input) { "abc" }
 
-      context '/abc/ applied to "abc"' do
-        let (:input) { "abc" }
+          it "matches" do
+            should eq(true)
+          end
+        end
 
-        it "matches" do
-          should eq(true)
+        context 'applied to "abcd"' do
+          let (:input) { 'abcd' }
+
+          it "matches" do
+            should eq(true)
+          end
+        end
+
+        context 'applied to "acb"' do
+          let (:input) { 'acb' }
+
+          it "doesn't match" do
+            should eq(false)
+          end
         end
       end
-
-      context '/abc/ applied to "abcd"' do
-        let (:input) { 'abcd' }
-
-        it "matches" do
-          should eq(true)
-        end
-      end
-
     end
 
     context 'single wild card match' do
       let (:body) { "ab." }
+
       context '/ab./ applied to "abc"' do
         let (:input) { 'abc' }
+
         it 'matches' do
           should eq(true)
         end
       end
 
-      context
     end
+
     context 'applied to a target that does match the expression' do
 
       it "does match" do
