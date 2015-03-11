@@ -1,4 +1,5 @@
 require File.expand_path './lib/myregex'
+
 describe MyRegex do
   subject      { reggy.match? input }
   let (:body)  { 'a' }
@@ -42,14 +43,31 @@ describe MyRegex do
     context 'single wild card match' do
       let (:body) { "ab." }
 
-      context '/ab./ applied to "abc"' do
-        let (:input) { 'abc' }
+      context '/ab./' do
+        context 'applied to "abc"' do
+          let (:input) { 'abc' }
 
-        it 'matches' do
-          should eq(true)
+          it 'matches' do
+            should eq(true)
+          end
         end
-      end
 
+        context 'applied to "ab1"' do
+          let (:input) { 'ab1' }
+
+          it 'matches' do
+            should eq(true)
+          end
+        end
+
+        context 'applied to "bac"' do
+          let (:input) {'bac' }
+          it 'doesnt match' do
+            should eq(false)
+          end
+        end
+
+      end
     end
 
     context 'applied to a target that does match the expression' do

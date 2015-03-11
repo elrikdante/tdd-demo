@@ -1,5 +1,4 @@
 require 'open3'
-require 'pry'
 module MyRegex
 
   class << self
@@ -15,16 +14,14 @@ module MyRegex
     end
 
     def match? string
-      @string = string
-      run!
-      @success
+     run! string
     end
 
     private
-    def run!
-      result,_ = Open3.capture2("./bin/myreggy", stdin_data: [@body,@string].join("\n"))
+    def run! string
+      result,_ = Open3.capture2("./bin/myreggy", stdin_data: [@body,string].join("\n"))
       result   = result.chomp.gsub(/"/m,'').split(',')
-      @success = result.any? && result.first.length > 0
+      result.any? && result.first.length > 0
     end
   end
 
