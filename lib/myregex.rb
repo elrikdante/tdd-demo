@@ -14,12 +14,12 @@ module MyRegex
     end
 
     def match? string
-     run! string
+      run! string
     end
 
     private
     def run! string
-      result,_ = Open3.capture2("./bin/myreggy", stdin_data: [@body,string].join("\n"))
+      result,_ = Open3.capture2('./bin/myreggy', stdin_data: [@body, string].join("\n"))
       result   = result.chomp.gsub(/"/m,'').split(',')
       result.any? && result.first.length > 0
     end
