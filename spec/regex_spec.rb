@@ -70,13 +70,31 @@ describe MyRegex do
       end
     end
 
-    context 'applied to a target that does match the expression' do
+    context 'a character class' do
+      let (:body) { "ab[123]" }
 
-      it "does match" do
-        expect(reggy.match? "a").to eq(true)
+      context 'ab[123] applied to ' do
+        context 'ab1' do
+          let (:input) { 'ab1' }
+          it 'matches' do
+            should eq(true)
+          end
+        end
+
+        context 'ab2' do
+          let (:input) { 'ab2' }
+          it 'matches' do
+            should eq(true)
+          end
+        end
+
+        context 'abz' do
+          let (:input) { 'abz' }
+          it 'doesnt match' do
+            should eq(false)
+          end
+        end
       end
-
     end
   end
-
 end
